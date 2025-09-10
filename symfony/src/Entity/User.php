@@ -4,9 +4,14 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[UniqueEntity('username', message: 'Этот username уже зарегестрирован')]
+#[UniqueEntity('email', message: 'Этот email уже зарегистрирован')]
+class User implements PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -14,13 +19,17 @@ class User
     private ?int $id = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    private string $username;
+    #[Assert\NotBlank(message: 'Имя пользователя не может быть пустым')]
+    private ?string $username = null;
 
     #[ORM\Column(length: 255)]
-    private string $password;
+    #[Assert\NotBlank(message: 'Пароль не может быть пустым')]
+    private ?string $password = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    private string $email;
+    #[Assert\NotBlank(message: 'Email не может быть пустым')]
+    #[Assert\Email(message: 'Неверный формат email')]
+    private ?string $email = null;
 
     public function getId(): ?int
     {
