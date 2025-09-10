@@ -18,7 +18,7 @@ class User implements PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255, nullable: true ,unique: true)]
     #[Assert\NotBlank(message: 'Имя пользователя не может быть пустым')]
     private ?string $username = null;
 
